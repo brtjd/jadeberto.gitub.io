@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jade Berto — Illustration & 2D/3D Animation</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'SmartDuck';
+  src: url('Smart Duck.otf') format('opentype');
+  font-weight: 400;
+}
+:root {
+  --pink-bg:    #f2b8c6;
+  --pink-deep:  #c0304a;
+  --ink:        #1c0f10;
+  --cream:      #f5ede3;
+  --violet-pale:#e8daf5;
+  --violet-mid: #3d1f5e;
+  --fairy-dark: #2d1520;
+  --font-title: 'SmartDuck', Georgia, serif;
+  --font-body:  'Space Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--pink-bg);color:var(--ink);font-family:var(--font-body);overflow-x:hidden;cursor:none;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");}
+.cur{position:fixed;width:9px;height:9px;border-radius:50%;background:var(--pink-deep);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:multiply;transition:width .15s,height .15s;}
+.cur-r{position:fixed;width:30px;height:30px;border:1px solid var(--pink-deep);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.3;transition:width .2s,height .2s;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;mix-blend-mode:multiply;}
+.nav-logo{font-family:var(--font-title);font-size:1.3rem;color:var(--pink-deep);letter-spacing:.04em;}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{font-family:var(--font-body);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);text-decoration:none;opacity:.6;transition:opacity .2s;}
+.nav-links a:hover{opacity:1;}
+.nav-sep{opacity:.2;font-size:.85rem;color:var(--ink);}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:600;}
+.hbg span{display:block;width:22px;height:1.5px;background:var(--ink);transition:transform .3s,opacity .3s;}
+.hbg.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.hbg.open span:nth-child(2){opacity:0;}
+.hbg.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+.mob{display:none;position:fixed;inset:0;background:var(--pink-bg);z-index:550;flex-direction:column;justify-content:center;align-items:flex-start;padding:4rem 3rem;gap:2.2rem;}
+.mob.open{display:flex;}
+.mob a{font-family:var(--font-title);font-size:2.5rem;color:var(--ink);text-decoration:none;opacity:.25;transition:opacity .2s,color .2s;}
+.mob a:hover{opacity:1;color:var(--pink-deep);}
+
+#hero{display:flex;flex-direction:column;background:var(--pink-bg);position:relative;overflow:hidden;}
+.hero-band{background:rgba(242,184,198,0.92);backdrop-filter:blur(2px);display:flex;flex-direction:row;justify-content:flex-start;align-items:flex-end;gap:4rem;padding:5rem 3rem 2.5rem 3rem;position:relative;z-index:3;flex-shrink:0;}
+.hero-band .hero-cta{margin-top:0;}
+.hero-img{position:relative;overflow:hidden;aspect-ratio:5/3;flex-shrink:0;}
+.hero-img img{width:100%;height:100%;object-fit:cover;object-position:center 18%;display:block;}
+h1.hero-name{font-family:var(--font-title);font-weight:400;font-size:clamp(3.5rem,6vw,7rem);line-height:.88;letter-spacing:.04em;color:var(--pink-deep);animation:fu 1s .1s ease both;}
+.hero-tagline{margin-top:.5rem;font-family:var(--font-body);font-size:1rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink-deep);opacity:.9;animation:fu 1s .2s ease both;}
+.hero-cta{margin-top:1.5rem;display:flex;flex-direction:column;gap:.8rem;align-items:flex-start;animation:fu 1s .3s ease both;}
+.hero-text-block{display:flex;flex-direction:column;}
+.btn-ink{display:inline-block;padding:1rem 2.4rem;background:var(--pink-deep);color:#fff;font-family:var(--font-body);font-size:.95rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+.btn-ink:hover{background:var(--ink);transform:translateY(-1px);}
+.btn-ghost{font-family:var(--font-body);font-size:.95rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink-deep);text-decoration:none;opacity:.7;border-bottom:1px solid currentColor;padding-bottom:1px;transition:opacity .2s;}
+.btn-ghost:hover{opacity:1;}
+.btn-outline{display:inline-block;padding:1rem 2.2rem;border:1px solid rgba(245,237,227,.3);color:var(--cream);font-family:var(--font-body);font-size:.95rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:border-color .2s,background .2s;margin-top:1.5rem;}
+.btn-outline:hover{border-color:rgba(245,237,227,.6);background:rgba(255,255,255,.04);}
+
+/* SHARED */
+.s-wrap{padding:7rem 3rem;}
+.s-num{font-family:var(--font-body);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;opacity:.4;margin-bottom:.5rem;}
+h2.s-t{font-family:var(--font-title);font-weight:400;font-size:clamp(2.8rem,5.5vw,5.5rem);line-height:.9;letter-spacing:.04em;margin-bottom:.5rem;}
+.s-sub{font-family:var(--font-body);font-size:1rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;margin-bottom:2.5rem;}
+.s-note{font-family:var(--font-body);font-size:.9rem;letter-spacing:.06em;line-height:1.8;opacity:.65;max-width:480px;margin-bottom:2rem;font-style:italic;}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* GALLERY */
+.g{position:relative;overflow:hidden;cursor:pointer;}
+.g img,.g video{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .6s ease;}
+.g:hover img{transform:scale(1.04);}
+.g-cap{position:absolute;bottom:0;left:0;right:0;padding:1.2rem 1.4rem;background:linear-gradient(to top,rgba(20,10,10,.75) 0%,transparent 100%);transform:translateY(100%);transition:transform .32s ease;color:#fff;}
+.g:hover .g-cap{transform:translateY(0);}
+.g-cap strong{font-family:var(--font-title);font-size:1.4rem;display:block;font-weight:400;}
+.g-cap span{font-family:var(--font-body);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;opacity:.8;}
+
+/* Pour les images contain : légende collée sous l'image, pas en absolute */
+.g-wrap{display:flex;flex-direction:column;cursor:pointer;}
+.g-wrap .g-img{overflow:hidden;position:relative;}
+.g-wrap .g-img img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .6s ease;}
+.g-wrap:hover .g-img img{transform:scale(1.02);}
+.g-wrap .g-label{padding:.5rem .2rem .1rem;}
+.g-wrap .g-label strong{font-family:var(--font-title);font-size:1.2rem;display:block;font-weight:400;color:var(--cream);}
+.g-wrap .g-label span{font-family:var(--font-body);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;opacity:.5;color:var(--cream);}
+
+.g-transparent{background:transparent!important;overflow:visible;}
+.g-transparent img{object-fit:contain;}
+.g-contain img{object-fit:contain!important;}
+
+/* 3D */
+#trois-d{background:#0f0b09;color:var(--cream);position:relative;overflow:hidden;}
+#trois-d::after{content:'3D';position:absolute;right:-1rem;bottom:-3rem;font-family:var(--font-title);font-size:clamp(14rem,28vw,24rem);color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.03);pointer-events:none;line-height:1;}
+#trois-d h2.s-t,#trois-d .s-num,#trois-d .s-sub{color:var(--cream);}
+.threed-g{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;position:relative;z-index:1;}
+.threed-thumb{aspect-ratio:1;overflow:hidden;}
+.threed-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* TRADUCTIONS */
+#traductions{background:#ede8f5;}
+#traductions h2.s-t{color:#3a2060;}
+#traductions .s-sub{color:#3a2060;}
+.grid-trad{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+
+/* FEMMES */
+#femmes{background:var(--pink-bg);}
+#femmes h2.s-t{color:var(--pink-deep);}
+#femmes .s-sub{color:var(--pink-deep);opacity:.5;}
+.grid-femmes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;}
+.grid-femmes .g{aspect-ratio:3/4;}
+
+/* VICES */
+#vices{background:#f7eed8;}
+#vices h2.s-t{color:#5c3010;}
+#vices .s-sub{color:#5c3010;opacity:.5;}
+.grid-vices-top{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;align-items:start;}
+.grid-vices-mid{margin-bottom:1rem;}
+.vices-anim-label{font-family:var(--font-body);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;opacity:.3;margin:1.5rem 0 .8rem;}
+.grid-vices-anims{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.grid-vices-anims .g{aspect-ratio:16/9;}
+
+/* MATINS */
+#matins{background:#f9f0e6;}
+#matins h2.s-t{color:#7a3a10;}
+#matins .s-sub{color:#7a3a10;opacity:.5;}
+.grid-matins{display:grid;grid-template-columns:1fr 2fr;gap:1rem;align-items:start;}
+
+/* PARIS */
+#paris{background:#2a1f3d;color:var(--cream);position:relative;overflow:hidden;}
+#paris h2.s-t,#paris .s-num,#paris .s-note,#paris .s-sub{color:var(--cream);}
+#paris::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");background-repeat:repeat;}
+#paris .s-wrap{position:relative;z-index:1;}
+.paris-duo{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;align-items:start;}.grid-paris-illus{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;align-items:start;}
+.photos-label{font-family:var(--font-body);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cream);opacity:.3;margin:2.5rem 0 .8rem;font-style:italic;}
+.grid-photos{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;align-items:start;}
+.grid-photos .g.wide{grid-column:span 2;}
+.grid-photos .photos-top{grid-column:span 2;}
+.grid-photos .g-wrap.photos-top{grid-column:span 2;}
+
+/* CHRIS */
+#chris{background:var(--ink);color:var(--cream);}
+#chris h2.s-t,#chris .s-num,#chris .s-sub{color:var(--cream);}
+.chris-hero{aspect-ratio:21/9;margin-bottom:1rem;}
+.chris-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.chris-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.chris-note{font-family:var(--font-body);font-size:.56rem;line-height:2;color:var(--cream);opacity:.35;font-style:italic;margin-top:2rem;border-top:1px solid rgba(245,237,227,.08);padding-top:1.5rem;}
+.chris-note strong{color:#d4b896;opacity:1;font-style:normal;}
+
+/* MILKY + FAIRY SPLIT */
+#milky-fairy{display:grid;grid-template-columns:1fr 1fr;min-height:90vh;}
+.milky-side{background:var(--violet-pale);color:var(--violet-mid);padding:5rem 2.5rem;position:relative;overflow:hidden;}
+.milky-side h2.s-t{color:var(--violet-mid);font-size:clamp(2rem,3.5vw,3rem);margin-bottom:.5rem;}
+.milky-side .s-num,.milky-side .s-sub{color:var(--violet-mid);opacity:.4;}
+.milky-side .s-note{color:var(--violet-mid);}
+.grid-milky{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem;}
+.grid-milky .g{aspect-ratio:3/4;}
+.grid-milky .g.full{grid-column:span 2;aspect-ratio:4/3;}
+.grid-milky .g.full-vert{grid-column:span 2;aspect-ratio:2/3;}
+.fairy-side{background:var(--fairy-dark);color:var(--cream);padding:5rem 2.5rem;position:relative;overflow:hidden;border-left:1px solid rgba(255,255,255,.05);}
+.fairy-side h2.s-t{color:var(--cream);font-size:clamp(2rem,3.5vw,3rem);margin-bottom:.5rem;}
+.fairy-side .s-num,.fairy-side .s-sub{color:var(--cream);opacity:.4;}
+.fairy-side .s-note{color:var(--cream);}
+.grid-fairy{display:grid;grid-template-columns:1fr;gap:.8rem;margin-top:1rem;}
+.grid-fairy .g{aspect-ratio:4/3;}
+
+/* ESSAIS */
+#essais{position:relative;overflow:hidden;background:#1a0805;color:var(--cream);}
+.essais-bg{position:absolute;inset:0;z-index:0;}
+.essais-bg img{width:100%;height:100%;object-fit:cover;display:block;opacity:.3;}
+#essais .s-wrap{position:relative;z-index:1;}
+#essais h2.s-t,#essais .s-num,#essais .s-sub{color:var(--cream);}
+.grid-essais{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;}
+.grid-essais .g.wide{grid-column:span 2;aspect-ratio:21/9;}
+
+/* CONTACT */
+#contact{background:var(--pink-deep);color:#fff;padding:8rem 3rem 12rem;position:relative;overflow:hidden;text-align:center;}
+.contact-gif{margin-top:3rem;display:flex;justify-content:center;}
+.contact-gif img{width:min(320px,45vw);display:block;}
+.contact-in{position:relative;z-index:2;max-width:480px;margin:0 auto;}
+.contact-in .s-num{color:#fff;opacity:.4;}
+.contact-in h2.s-t{color:#fff;}
+.contact-in .s-note{color:#fff;margin:0 auto 2.5rem;max-width:380px;opacity:.7;font-style:normal;}
+.btn-white{display:inline-block;padding:.8rem 2.2rem;background:#fff;color:var(--pink-deep);font-family:var(--font-body);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+.btn-white:hover{background:var(--cream);transform:translateY(-1px);}
+.socials{display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap;}
+.socials a{font-family:var(--font-body);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;text-decoration:none;opacity:.4;border-bottom:1px solid currentColor;padding-bottom:1px;transition:opacity .2s;}
+.socials a:hover{opacity:1;}
+
+footer{background:var(--ink);color:var(--cream);padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--font-body);font-size:.52rem;letter-spacing:.1em;}
+hr.div{border:none;border-top:1px solid rgba(28,15,16,.08);margin:0 3rem;}
+hr.div-inv{border:none;border-top:1px solid rgba(245,237,227,.06);margin:0 3rem;}
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* PROTECTION */
+img,video{-webkit-user-drag:none;user-drag:none;pointer-events:none;}
+.g::after{content:'';position:absolute;inset:0;z-index:10;background:transparent;}
+body{-webkit-user-select:none;-moz-user-select:none;user-select:none;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:1.2rem 1.5rem;}
+  .nav-links{display:none;}
+  .hbg{display:flex;}
+  #hero{flex-direction:column;}
+  .hero-band{flex-direction:column;align-items:flex-start;gap:1rem;padding:5rem 1.5rem 2rem;}
+  .hero-img{min-height:55vw;}
+  .s-wrap{padding:5rem 1.5rem;}
+  hr.div,hr.div-inv{margin:0 1.5rem;}
+  .threed-g{grid-template-columns:1fr;gap:2rem;}
+  .grid-trad,.grid-matins,.grid-paris-illus{grid-template-columns:1fr;}
+  .grid-femmes{grid-template-columns:1fr 1fr;}
+  .grid-vices-top{grid-template-columns:1fr;}
+  .grid-vices-anims{grid-template-columns:1fr;}
+  .paris-duo{grid-template-columns:1fr;}
+  .grid-photos{grid-template-columns:1fr 1fr;}
+  .grid-photos .g.wide{grid-column:span 1;}
+  .grid-essais{grid-template-columns:1fr;}
+  .grid-essais .g.wide{grid-column:span 1;aspect-ratio:16/9;}
+  #milky-fairy{grid-template-columns:1fr;}
+  .milky-side,.fairy-side{padding:4rem 1.5rem;}
+  .fairy-side{border-left:none;border-top:1px solid rgba(255,255,255,.05);}
+  .chris-grid,.chris-3col{grid-template-columns:1fr 1fr;}
+  .chris-hero{aspect-ratio:16/9;}
+  footer{flex-direction:column;gap:.4rem;text-align:center;}
+}
+@media(max-width:560px){
+  .grid-femmes,.grid-vices-anims,.grid-photos,.grid-milky,.grid-fairy,.grid-essais{grid-template-columns:1fr;}
+  .grid-milky .g.full{grid-column:span 1;aspect-ratio:3/4;}
+  .chris-grid,.chris-3col{grid-template-columns:1fr;}
+  h1.hero-name{font-size:clamp(2.5rem,12vw,4rem);}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<nav>
+  <div class="nav-logo">Jade Berto</div>
+  <ul class="nav-links">
+    <li><a href="#trois-d">Demoreel</a></li>
+    <li><a href="#traductions">Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li class="nav-sep">|</li>
+    <li><a href="https://www.instagram.com/jade_berto/" target="_blank" rel="noopener">Instagram ↗</a></li>
+    <li><a href="https://www.linkedin.com/in/jade-berto-492149252/" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+  </ul>
+  <div class="hbg" id="hbg"><span></span><span></span><span></span></div>
+</nav>
+<div class="mob" id="mob">
+  <a href="#trois-d" onclick="cm()">Demoreel</a>
+  <a href="#traductions" onclick="cm()">Works</a>
+  <a href="#contact" onclick="cm()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-band">
+    <div class="hero-text-block">
+      <h1 class="hero-name">Jade Berto</h1>
+      <p class="hero-tagline">Compositing — 2D/3D Animation — Illustration</p>
+    </div>
+    <div class="hero-cta">
+      <a href="#trois-d" class="btn-ink">Watch demoreel</a>
+      <a href="#contact" class="btn-ghost">Get in touch &rarr;</a>
+    </div>
+  </div>
+  <div class="hero-img">
+    <img src="webp/00_hero_03_Femmes_hq.webp" alt="Jade Berto — femmes" style="object-position:center 15%">
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 01 — DEMOREEL -->
+<section id="trois-d" class="s-wrap">
+  <div class="threed-g">
+    <div class="reveal">
+      <div class="s-num">&#8212; 01</div>
+      <h2 class="s-t">Lighting &amp;<br>Compositing<br>Demoreel</h2>
+      <div class="s-sub">Nuke — Maya — Renderman — Substance — Houdini</div>
+      <a href="https://youtu.be/-0OnPmSdkm4" class="btn-outline" target="_blank">&#8599; Watch on YouTube</a>
+    </div>
+    <div class="threed-thumb reveal">
+      <img src="webp/01_LCD_Kepass_hq.webp" alt="KePass">
+    </div>
+  </div>
+</section>
+
+<hr class="div-inv">
+
+<!-- 02 — DES TRADUCTIONS DE L'AMOUR -->
+<section id="traductions" class="s-wrap">
+  <div class="s-num reveal">&#8212; 02</div>
+  <h2 class="s-t reveal">Des Traductions<br>de l'Amour</h2>
+  <div class="s-sub reveal">Nuke — Davinci — Procreate</div>
+  <div class="grid-trad reveal">
+    <div class="g" style="aspect-ratio:1">
+      <img src="webp/02_DTDA_love_hq.webp" alt="des traductions de l'amour">
+      <div class="g-cap"><strong>Traduction 01</strong><span>Procreate illustration</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:1">
+      <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;display:block;">
+        <source src="webm/02_lovetest_hq.webm" type="video/webm">
+      </video>
+      <div class="g-cap"><strong>Traduction 02</strong><span>Procreate illustration, animated on Nuke and edited on Davinci</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 03 — FEMMES -->
+<section id="femmes" class="s-wrap">
+  <div class="s-num reveal">&#8212; 03</div>
+  <h2 class="s-t reveal">femmes</h2>
+  <div class="s-sub reveal">Procreate</div>
+  <div class="grid-femmes reveal">
+    <div class="g">
+      <img src="webp/03_femmes_line_hq.webp" alt="femmes line">
+      <div class="g-cap"><strong>Line</strong><span></span></div>
+    </div>
+    <div class="g">
+      <img src="webp/03_femmes_wip_hq.webp" alt="femmes wip">
+      <div class="g-cap"><strong>First Layer</strong><span></span></div>
+    </div>
+    <div class="g">
+      <img src="webp/00_hero_03_Femmes_hq.webp" alt="femmes final" style="object-position:center 30%">
+      <div class="g-cap"><strong>Final</strong><span></span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 04 — LES VICES -->
+<section id="vices" class="s-wrap">
+  <div class="s-num reveal">&#8212; 04</div>
+  <h2 class="s-t reveal">les vices</h2>
+  <div class="s-sub reveal">Nuke — Davinci — Procreate</div>
+  <div class="grid-vices-top reveal">
+    <div class="g" style="aspect-ratio:2/1">
+      <img src="webp/04_vices_hq.webp" alt="les vices">
+      <div class="g-cap"><strong>Vice</strong><span>Final, Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:2/1">
+      <img src="webp/04_vices_wip_hq.webp" alt="les vices wip">
+      <div class="g-cap"><strong>Vice</strong><span>WIP, Procreate</span></div>
+    </div>
+  </div>
+  <div class="vices-anim-label reveal">&#8212; 2D animations</div>
+  <div class="grid-vices-anims reveal">
+    <div class="g">
+      <video autoplay loop muted playsinline>
+        <source src="webm/04_party_hq.webm" type="video/webm">
+      </video>
+      <div class="g-cap"><strong>Rythm</strong><span>Procreate illustration, animated on Nuke with tracking and edited on Davinci</span></div>
+    </div>
+    <div class="g">
+      <video autoplay loop muted playsinline>
+        <source src="webm/04_smookloop_hq.webm" type="video/webm">
+      </video>
+      <div class="g-cap"><strong>Loop</strong><span>Procreate illustration and animation, edited on Nuke &amp; Davinci</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 05 — LES MATINS LYONNAIS -->
+<section id="matins" class="s-wrap">
+  <div class="s-num reveal">&#8212; 05</div>
+  <h2 class="s-t reveal">les matins<br>lyonnais</h2>
+  <div class="s-sub reveal">Procreate</div>
+  <div class="grid-matins reveal">
+    <div class="g" style="aspect-ratio:4/3">
+      <img src="webp/05_lyon_line_hq.webp" alt="les matins lyonnais sketch">
+      <div class="g-cap"><strong>Line</strong><span></span></div>
+    </div>
+    <div class="g" style="aspect-ratio:4/3">
+      <img src="webp/05_lyon_final_hq.webp" alt="les matins lyonnais final">
+      <div class="g-cap"><strong>Final</strong><span></span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- 06 — LA VIE A PARIS -->
+<section id="paris" class="s-wrap">
+  <div class="s-num reveal">&#8212; 06</div>
+  <h2 class="s-t reveal">La Vie a Paris</h2>
+  <div class="s-sub reveal">Procreate and Silver &amp; Digital Photography</div>
+  <p class="s-note reveal">in the streets and the nights</p>
+  <div class="paris-duo reveal">
+    <div class="g" style="aspect-ratio:3/4;max-width:75%;justify-self:end">
+      <img src="webp/06_paris_color_hq.webp" alt="amitie illustration">
+      <div class="g-cap"><strong>Amitie</strong><span>Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:3/2;max-width:75%;justify-self:start">
+      <img src="webp/06_paris_color_pic_hq.webp" alt="amitie photo">
+      <div class="g-cap"><strong>Amitie</strong><span>Reference</span></div>
+    </div>
+  </div>
+  <div class="grid-paris-illus reveal" style="margin-top:1rem;">
+    <div class="g" style="aspect-ratio:3/2">
+      <img src="webp/06_paris_bar_hq.webp" alt="la vie a Paris bar">
+      <div class="g-cap"><strong>NightBar</strong><span>Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:3/2">
+      <img src="webp/06_paris_city_pic_hq.webp" alt="la vie a Paris city">
+      <div class="g-cap"><strong>CityVie</strong><span>Procreate over a silver photography</span></div>
+    </div>
+  </div>
+  <p class="photos-label reveal">photographs edited on Procreate</p>
+  <div class="grid-photos reveal">
+    <div class="g photos-top" style="aspect-ratio:16/7">
+      <img src="webp/06_paris_pic01_hq.webp" alt="photo Paris">
+      <div class="g-cap"><strong>Silver 01</strong><span>Edited on Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:3/4">
+      <img src="webp/06_paris_pic02_hq.webp" alt="photo Paris 2">
+      <div class="g-cap"><strong>Silver 02</strong><span>Edited on Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:3/4">
+      <img src="webp/06_paris_pic03_hq.webp" alt="portrait">
+      <div class="g-cap"><strong>Digital 01</strong><span>Edited on Procreate</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div-inv">
+
+<!-- 07 — 2D/3D COLLABORATIVE PROJECT -->
+<section id="chris" class="s-wrap">
+  <div class="s-num reveal">&#8212; 07</div>
+  <h2 class="s-t reveal">2D/3D Collaborative<br>Project</h2>
+  <div class="s-sub reveal">Maya — Renderman — Substance Painter — Nuke — Procreate</div>
+  <p class="s-note reveal">Collaboration works with ChrisDogzout — 2D cover illustration for his EP "Ojuju Calabar", 3D render for his song "Noutro Tempo"</p>
+  <div class="chris-grid reveal">
+    <div class="g" style="aspect-ratio:1">
+      <img src="webp/07_ojuju_hq.webp" alt="Ojuju Calabar" style="width:100%;height:100%;object-fit:cover;">
+      <div class="g-cap"><strong>Final cover for "Ojuju Calabar" — ChrisDogzout</strong><span>Procreate</span></div>
+    </div>
+    <div class="g" style="aspect-ratio:1">
+      <img src="webp/07_CD_final_hq.webp" alt="final render" style="width:100%;height:100%;object-fit:cover;">
+      <div class="g-cap"><strong>Final cover for "Noutro Tempo" — ChrisDogzout</strong><span>Maya — Renderman — Substance Painter — Nuke — Procreate</span></div>
+    </div>
+  </div>
+  <div class="chris-grid reveal">
+    <div class="g" style="aspect-ratio:1">
+      <img src="webp/07_CD_wireframe_hq.webp" alt="wireframe" style="width:100%;height:100%;object-fit:cover;">
+      <div class="g-cap"><strong>Wireframe</strong><span></span></div>
+    </div>
+    <div class="g" style="aspect-ratio:1">
+      <img src="webp/07_CD_mix_hq.webp" alt="wireframe textured" style="width:100%;height:100%;object-fit:cover;">
+      <div class="g-cap"><strong>Wip</strong><span></span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="div-inv">
+
+<!-- 08 + 09 — MILKY / FAIRY SPLIT -->
+<div id="milky-fairy">
+  <div class="milky-side">
+    <div class="s-num reveal">&#8212; 08</div>
+    <h2 class="s-t reveal">Milky Pleasure</h2>
+    <div class="s-sub reveal">Procreate</div>
+    <p class="s-note reveal">Illustration realized for a 3D project in a dystopic world</p>
+    <div class="grid-milky reveal">
+      <div class="g full-vert">
+        <img src="webp/08_milky_final_hq.webp" alt="Milky Pleasure poster" style="width:100%;height:100%;object-fit:cover;object-position:center top;">
+        <div class="g-cap"><strong>Final</strong><span></span></div>
+      </div>
+      <div class="g">
+        <img src="webp/08_milky_fgbg_hq.webp" alt="Milky color version" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>WIP</strong><span></span></div>
+      </div>
+      <div class="g">
+        <img src="webp/08_milky_line_hq.webp" alt="Milky sketch" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>Line</strong><span></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="fairy-side">
+    <div class="s-num reveal">&#8212; 09</div>
+    <h2 class="s-t reveal">Fairy on film</h2>
+    <div class="s-sub reveal">Procreate — WIP</div>
+    <p class="s-note reveal">Still in wip — incrustation of a Procreate illustration on a silver photography</p>
+    <div class="grid-fairy reveal">
+      <div class="g" style="aspect-ratio:4/3">
+        <img src="webp/09_fairy_final_hq.webp" alt="fairy composited final" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>postprod test</strong><span></span></div>
+      </div>
+      <div class="g" style="aspect-ratio:4/3">
+        <img src="webp/09_fairy_fgbg_hq.webp" alt="fairy prefinal" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>draw over test</strong><span></span></div>
+      </div>
+      <div class="g" style="aspect-ratio:4/3">
+        <img src="webp/09_fairy_fg_hq.webp" alt="fairy illustration" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>foreground</strong><span></span></div>
+      </div>
+      <div class="g" style="aspect-ratio:4/3">
+        <img src="webp/09_fairy_bg_hq.webp" alt="analog photo" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>background</strong><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="div-inv">
+
+<!-- 10 — COLOUR & TEXTURE EXPERIMENTS -->
+<section id="essais">
+  <div class="essais-bg">
+    <img src="webp/10_xp_bg_01_hq.webp" alt="texture background">
+  </div>
+  <div class="s-wrap">
+    <div class="s-num reveal">&#8212; 10</div>
+    <h2 class="s-t reveal">Color &amp; Texture<br>Experiments</h2>
+    <div class="s-sub reveal">Procreate</div>
+    <div class="grid-essais reveal">
+      <div class="g" style="aspect-ratio:3/4">
+        <img src="webp/10_xp_bg_01_hq.webp" alt="organic textures" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>organic textures</strong><span></span></div>
+      </div>
+      <div class="g" style="aspect-ratio:3/4">
+        <img src="webp/10_xp_02_hq.webp" alt="figures" style="width:100%;height:100%;object-fit:cover;">
+        <div class="g-cap"><strong>extra-saturation</strong><span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-in">
+    <div class="s-num reveal">&#8212; 11</div>
+    <h2 class="s-t reveal">Get in touch</h2>
+    <p class="s-note reveal">Open to freelance projects, staff positions and any kind of creative collaboration — compositing, animation, illustration and beyond!</p>
+    <a href="mailto:jadee.bertoo@gmail.com" class="btn-white reveal">&#9993; jadee.bertoo@gmail.com</a>
+    <div class="socials reveal">
+      <a href="https://www.instagram.com/jade_berto/" target="_blank">Instagram</a>
+      <a href="https://www.linkedin.com/in/jade-berto-492149252/" target="_blank">LinkedIn</a>
+    </div>
+    <div class="contact-gif reveal">
+      <video autoplay loop muted playsinline style="width:100%;display:block;"><source src="webm/10_Gifwhynot.webm" type="video/webm"></video>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Jade Berto</span>
+  <span>Illustration &amp; 2D/3D Animation and Compositing</span>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.g').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';curR.style.width='44px';curR.style.height='44px';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='9px';cur.style.height='9px';curR.style.width='30px';curR.style.height='30px';});
+});
+const hbg=document.getElementById('hbg'),mob=document.getElementById('mob');
+hbg.addEventListener('click',()=>{hbg.classList.toggle('open');mob.classList.toggle('open');});
+function cm(){hbg.classList.remove('open');mob.classList.remove('open');}
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['s','u','a','c','p'].includes(e.key))e.preventDefault();});
+document.addEventListener('dragstart',e=>e.preventDefault());
+document.addEventListener('selectstart',e=>e.preventDefault());
+</script>
+</body>
+</html>
